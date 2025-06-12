@@ -2,20 +2,21 @@ package fr.kstars.pocBattlepass.internal.battlepass.repositories;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.kstars.pocBattlepass.internal.battlepass.entities.PlayerProfil;
+import fr.kstars.pocBattlepass.internal.battlepass.entities.PlayerProfile;
 import fr.kstars.pocBattlepass.internal.utils.ChatUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class JsonFileRepository implements Repository {
     private final JavaPlugin plugin;
 
     private File jsonDataFile;
-    private ArrayList<PlayerProfil> cachedPlayerProfils = new ArrayList<>();
+    private List<PlayerProfile> cachedPlayerProfils = List.of();
 
     public JsonFileRepository(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -28,15 +29,15 @@ public class JsonFileRepository implements Repository {
     }
 
     @Override
-    public void addPlayerProfil(PlayerProfil playerProfil) {
+    public void addPlayerProfile(PlayerProfile playerProfil) {
         if (!this.cachedPlayerProfils.contains(playerProfil)) {
             this.cachedPlayerProfils.add(playerProfil);
         }
     }
 
     @Override
-    public void removePlayerProfil(String playerId) {
-        for (PlayerProfil playerProfil : this.cachedPlayerProfils) {
+    public void removePlayerProfile(String playerId) {
+        for (PlayerProfile playerProfil : this.cachedPlayerProfils) {
             if (playerProfil.getPlayerId().equals(playerId)) {
                 this.cachedPlayerProfils.remove(playerProfil);
                 return;
@@ -45,8 +46,8 @@ public class JsonFileRepository implements Repository {
     }
 
     @Override
-    public PlayerProfil getPlayerProfil(String playerId) {
-        for (PlayerProfil playerProfil : this.cachedPlayerProfils) {
+    public PlayerProfile getPlayerProfile(String playerId) {
+        for (PlayerProfile playerProfil : this.cachedPlayerProfils) {
             if (playerProfil.getPlayerId().equals(playerId)) {
                 return playerProfil;
             }
@@ -55,12 +56,12 @@ public class JsonFileRepository implements Repository {
     }
 
     @Override
-    public ArrayList<PlayerProfil> getPlayerProfils() {
+    public List<PlayerProfile> getPlayerProfiles() {
         return this.cachedPlayerProfils;
     }
 
     @Override
-    public void updatePlayerProfil(PlayerProfil newPlayerProfil) {
+    public void updatePlayerProfile(PlayerProfile newPlayerProfil) {
         for (int i = 0; i < this.cachedPlayerProfils.size(); i++) {
             if (newPlayerProfil.getPlayerId().equals(this.cachedPlayerProfils.get(i).getPlayerId())) {
                 this.cachedPlayerProfils.set(i, newPlayerProfil);
@@ -85,7 +86,7 @@ public class JsonFileRepository implements Repository {
             }
 
             ObjectMapper playerProfilMapper = new ObjectMapper();
-            this.cachedPlayerProfils = playerProfilMapper.readValue(this.jsonDataFile, new TypeReference<ArrayList<PlayerProfil>>() {});
+            this.cachedPlayerProfils = playerProfilMapper.readValue(this.jsonDataFile, new TypeReference<ArrayList<PlayerProfile>>() {});
         } catch (IOException error) {
             throw  new IOException(error.getMessage());
         }

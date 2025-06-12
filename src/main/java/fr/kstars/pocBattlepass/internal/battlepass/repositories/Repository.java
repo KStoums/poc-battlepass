@@ -1,14 +1,14 @@
 package fr.kstars.pocBattlepass.internal.battlepass.repositories;
 
-import fr.kstars.pocBattlepass.internal.battlepass.entities.PlayerProfil;
+import fr.kstars.pocBattlepass.internal.battlepass.entities.PlayerProfile;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Repository {
-    void addPlayerProfil(PlayerProfil playerProfil);
-    void removePlayerProfil(String playerId);
-    PlayerProfil getPlayerProfil(String playerId);
-    ArrayList<PlayerProfil> getPlayerProfils();
-    void updatePlayerProfil(PlayerProfil playerProfil);
+    void addPlayerProfile(PlayerProfile playerProfil);
+    void removePlayerProfile(String playerId);
+    PlayerProfile getPlayerProfile(String playerId);
+    List<PlayerProfile> getPlayerProfiles();
+    void updatePlayerProfile(PlayerProfile playerProfil);
     void gracefulStop();
 }

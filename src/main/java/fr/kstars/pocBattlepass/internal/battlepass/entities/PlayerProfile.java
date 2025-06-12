@@ -1,10 +1,10 @@
 package fr.kstars.pocBattlepass.internal.battlepass.entities;
 
-public class PlayerProfil {
+public class PlayerProfile {
     private final String playerId;
     private Integer level;
 
-    public PlayerProfil(String userId, Integer level) {
+    public PlayerProfile(String userId, Integer level) {
         this.playerId = userId;
         this.level = level;
     }
