@@ -1,6 +1,6 @@
 name: poc-battlepass
 version: '1.0.0-POC'
 author: Kstars
-main: fr.kstars.pocBattlepass.cmd.Main
+main: fr.kstars.pocBattlepass.BattlepassPlugin
 api-version: '1.21'
 description: An BattlePass plugin

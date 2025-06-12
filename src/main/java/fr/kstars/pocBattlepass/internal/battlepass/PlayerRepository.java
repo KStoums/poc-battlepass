@@ -1,10 +1,8 @@
-package fr.kstars.pocBattlepass.internal.battlepass.repositories;
-
-import fr.kstars.pocBattlepass.internal.battlepass.entities.PlayerProfile;
+package fr.kstars.pocBattlepass.internal.battlepass;
 
 import java.util.List;
 
-public interface Repository {
+public interface PlayerRepository {
     void addPlayerProfile(PlayerProfile playerProfil);
     void removePlayerProfile(String playerId);
     PlayerProfile getPlayerProfile(String playerId);

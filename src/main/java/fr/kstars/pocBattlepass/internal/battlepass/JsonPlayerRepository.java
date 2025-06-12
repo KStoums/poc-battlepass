@@ -1,8 +1,7 @@
-package fr.kstars.pocBattlepass.internal.battlepass.repositories;
+package fr.kstars.pocBattlepass.internal.battlepass;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.kstars.pocBattlepass.internal.battlepass.entities.PlayerProfile;
 import fr.kstars.pocBattlepass.internal.utils.ChatUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,19 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class JsonFileRepository implements Repository {
+public class JsonPlayerRepository implements PlayerRepository {
     private final JavaPlugin plugin;
 
     private File jsonDataFile;
     private List<PlayerProfile> cachedPlayerProfils = List.of();
 
-    public JsonFileRepository(JavaPlugin plugin) {
+    public JsonPlayerRepository(JavaPlugin plugin) {
         this.plugin = plugin;
 
         try {
             initJsonDataFile();
         } catch (IOException error) {
-            plugin.getLogger().log(Level.SEVERE, ChatUtils.PluginPrefixWithoutColor + "Could not initialize JsonFileRepository!", error);
+            plugin.getLogger().log(Level.SEVERE, ChatUtils.PLUGIN_PREFIX_WITHOUT_COLOR + "Could not initialize JsonFileRepository!", error);
         }
     }
 
@@ -74,7 +73,7 @@ public class JsonFileRepository implements Repository {
         try {
             saveCachedPlayerProfils();
         } catch (IOException error) {
-            this.plugin.getLogger().log(Level.SEVERE, ChatUtils.PluginPrefixWithoutColor + "Could not save JsonFileRepository!", error);
+            this.plugin.getLogger().log(Level.SEVERE, ChatUtils.PLUGIN_PREFIX_WITHOUT_COLOR + "Could not save JsonFileRepository!", error);
         }
     }
 
