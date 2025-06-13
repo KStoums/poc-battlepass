@@ -1,0 +1,55 @@
+package fr.kstars.battlepass;
+
+import fr.kstars.battlepass.player.*;
+import fr.kstars.battlepass.reward.JsonRewardFileLoader;
+import fr.kstars.battlepass.reward.JsonRewardRepository;
+import fr.kstars.battlepass.reward.Reward;
+import fr.kstars.battlepass.util.ChatUtil;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+
+public final class BattlepassPlugin extends JavaPlugin {
+    private PlayerRepository playerRepository;
+
+    @Override
+    public void onEnable() {
+        getLogger().info("Initializing Battlepass plugin...");
+        try {
+            //Player Repository
+            JsonPlayerFileLoader jsonPlayerFileLoader = new JsonPlayerFileLoader();
+            File jsonPlayerFile = jsonPlayerFileLoader.loadJsonPlayerFile();
+            PlayerProfile[] jsonPlayerData = jsonPlayerFileLoader.getJsonData(jsonPlayerFile);
+            JsonPlayerRepository playerRepository = new JsonPlayerRepository(getLogger(), jsonPlayerFile, new ArrayList<>(Arrays.asList(jsonPlayerData)));
+            this.playerRepository = playerRepository;
+
+            //Reward Repository
+            JsonRewardFileLoader jsonRewardFileLoader = new JsonRewardFileLoader();
+            File jsonRewardFile = jsonRewardFileLoader.loadJsonRewardFile();
+            Reward[] jsonRewardData = jsonRewardFileLoader.getJsonData(jsonRewardFile);
+            JsonRewardRepository rewardRepository = new JsonRewardRepository(new ArrayList<>(Arrays.asList(jsonRewardData)));
+
+            //Commands
+            Objects.requireNonNull(getCommand("battlepass")).setExecutor(new BattlepassCommand(rewardRepository, playerRepository));
+
+            //Tasks
+            getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerSaveDataTask(playerRepository), 0, 1200 * 5);
+        } catch (Exception e) {
+            getLogger().severe(e.getMessage());
+        }
+
+        getLogger().info(ChatUtil.PLUGIN_PREFIX_WITHOUT_COLOR + "Plugin Enabled!");
+    }
+
+    @Override
+    public void onDisable() {
+        if (this.playerRepository != null) {
+            playerRepository.save();
+        }
+
+        getLogger().info(ChatUtil.PLUGIN_PREFIX_WITHOUT_COLOR + "Plugin Disabled!");
+    }
+}
