@@ -3,12 +3,13 @@ package fr.kstars.battlepass.reward;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 public class JsonRewardRepository implements RewardRepository {
-    private final List<Reward> rewards;
+    private List<Reward> rewards;
 
     @Override
     public Optional<Reward> findByNameAndLevel(String rewardName, int rewardLevel) {
@@ -56,12 +57,12 @@ public class JsonRewardRepository implements RewardRepository {
             int startIndex = endIndex - 9;
 
             List<Reward> rewards = this.findAllPremium();
-            for (int i = startIndex; i < endIndex; i++) {
-                if (i > rewards.size()-1) {
-                    break;
+            for (Reward reward : rewards) {
+                if (!(reward.getLevel() > startIndex && reward.getLevel() < endIndex)) {
+                    continue;
                 }
 
-                pageRewards.add(rewards.get(i));
+                pageRewards.add(reward);
             }
 
             return pageRewards;
@@ -71,14 +72,19 @@ public class JsonRewardRepository implements RewardRepository {
         int startIndex = endIndex - 9;
 
         List<Reward> rewards = this.findAllFree();
-        for (int i = startIndex; i < endIndex; i++) {
-            if (i > rewards.size()-1) {
-                break;
+        for (Reward reward : rewards) {
+            if (!(reward.getLevel() > startIndex && reward.getLevel() < endIndex)) {
+                continue;
             }
 
-            pageRewards.add(rewards.get(i));
+            pageRewards.add(reward);
         }
 
         return pageRewards;
+    }
+
+    @Override
+    public void updateRewards(Reward[] rewards) {
+        this.rewards = Arrays.stream(rewards).toList();
     }
 }

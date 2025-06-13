@@ -9,4 +9,5 @@ public interface RewardRepository {
     List<Reward> findAllFree();
     List<Reward> findAllPremium();
     List<Reward> findByPage(int page, boolean premiumRewards);
+    void updateRewards(Reward[] rewards);
 }

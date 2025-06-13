@@ -7,3 +7,8 @@ description: An BattlePass plugin
 commands:
   battlepass:
     description: Open the battlepass interface
+    aliases: bp
+  battlepass-admin:
+    description: Commands for server administrators
+    aliases: bpa
+    permission: battlepass.admin

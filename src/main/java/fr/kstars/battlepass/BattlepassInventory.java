@@ -32,7 +32,7 @@ public class BattlepassInventory {
     public static final Component PROFILE_ITEM_NAME = Component.text("●", NamedTextColor.DARK_RED, TextDecoration.BOLD).
             appendSpace().
             append(Component.text("Profile", NamedTextColor.DARK_RED, TextDecoration.BOLD));
-    public static final String BATTLEPASS_INVENTORY_NAME = "§4§lBattlepass §7| §4Level §l%levelStart% §4to §l%levelEnd%";
+    public static final String BATTLEPASS_INVENTORY_NAME = "§4§lBattlepass §7| §4Level §l%levelStart% §4to §l%levelEnd%"; //Change the name if you wish, but do not remove "%levelStart% to %levelEnd%".
 
     public Inventory createInventory(int page, UUID playerUuid) {
         Optional<PlayerProfile> playerProfile = this.playerRepository.findById(playerUuid);

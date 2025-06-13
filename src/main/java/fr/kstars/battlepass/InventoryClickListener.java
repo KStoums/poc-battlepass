@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,44 +21,43 @@ public class InventoryClickListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getCurrentItem() == null) {
+            return;
+        }
+
         String inventoryTitle = PlainTextComponentSerializer.plainText().serialize(event.getView().title());
         if (inventoryTitle.isEmpty()) {
             return;
         }
 
-        if (!inventoryTitle.startsWith(BattlepassInventory.BATTLEPASS_INVENTORY_NAME)) {
+        Optional<Integer> currentPage = getCurrentPage(inventoryTitle);
+        if (currentPage.isEmpty()) {
             return;
         }
-
-        if (event.getCurrentItem() == null) {
-            return;
-        }
-
-        int currentPage = getCurrentPage(inventoryTitle);
 
         String itemDisplayName = PlainTextComponentSerializer.plainText().serialize(event.getCurrentItem().displayName());
         String nextPageItemNameString = PlainTextComponentSerializer.plainText().serialize(BattlepassInventory.NEXT_PAGE_ITEM_NAME);
         String previousPageItemNameString = PlainTextComponentSerializer.plainText().serialize(BattlepassInventory.PREVIOUS_PAGE_ITEM_NAME);
 
-        if (itemDisplayName.equals(nextPageItemNameString)) {
-            Inventory nextPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage+1, event.getWhoClicked().getUniqueId());
+        if (itemDisplayName.equals("[" + nextPageItemNameString + "]")) {
+            Inventory nextPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage.get()+1, event.getWhoClicked().getUniqueId());
             event.getWhoClicked().openInventory(nextPageBattlepassInventory);
-        } else if (itemDisplayName.equals(previousPageItemNameString)) {
-            Inventory previousPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage-1, event.getWhoClicked().getUniqueId());
+        } else if (itemDisplayName.equals("[" + previousPageItemNameString + "]")) {
+            Inventory previousPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage.get()-1, event.getWhoClicked().getUniqueId());
             event.getWhoClicked().openInventory(previousPageBattlepassInventory);
         }
 
         event.setCancelled(true);
     }
 
-    private int getCurrentPage(String inventoryTitle) {
+    private Optional<Integer> getCurrentPage(String inventoryTitle) {
         Pattern pattern = Pattern.compile("to §l(\\d+)");
         Matcher matcher = pattern.matcher(inventoryTitle);
 
         if (matcher.find()) {
-            return (int) Math.ceil(Integer.parseInt(matcher.group(1)) / 9.0);
+            return Optional.of((int) Math.ceil(Integer.parseInt(matcher.group(1)) / 9.0));
         }
 
-        return 1;
+        return Optional.empty();
     }
 }
