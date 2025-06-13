@@ -2,11 +2,10 @@ package fr.kstars.battlepass.reward;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface RewardRepository {
-    Optional<Reward> getByUuid(UUID rewardUuid);
-    List<Reward> getAll();
+    Optional<Reward> findByNameAndLevel(String rewardName, int rewardLevel);
+    List<Reward> findAll();
     List<Reward> findAllFree();
     List<Reward> findAllPremium();
     List<Reward> findByPage(int page, boolean premiumRewards);

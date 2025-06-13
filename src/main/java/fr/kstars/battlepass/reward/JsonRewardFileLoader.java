@@ -5,7 +5,6 @@ import org.bukkit.Material;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 public class JsonRewardFileLoader {
     public File loadJsonRewardFile() throws IOException {
@@ -19,7 +18,7 @@ public class JsonRewardFileLoader {
             ObjectMapper mapper = new ObjectMapper();
 
             Reward[] exempleRewards = new Reward[] {
-                    new Reward(UUID.randomUUID(), "Example", "Example", Material.CHEST_MINECART,1, false)
+                    new Reward("Example", "Example", Material.CHEST_MINECART,1, false)
             };
 
             mapper.writeValue(jsonDataFile, exempleRewards);

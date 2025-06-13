@@ -5,19 +5,18 @@ import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @AllArgsConstructor
 public class JsonRewardRepository implements RewardRepository {
     private final List<Reward> rewards;
 
     @Override
-    public Optional<Reward> getByUuid(UUID rewardUuid) {
-        return this.rewards.stream().findFirst().filter(reward -> reward.getUuid().equals(rewardUuid));
+    public Optional<Reward> findByNameAndLevel(String rewardName, int rewardLevel) {
+        return this.rewards.stream().findFirst().filter(reward -> reward.getName().equals(rewardName) && reward.getLevel() == rewardLevel);
     }
 
     @Override
-    public List<Reward> getAll() {
+    public List<Reward> findAll() {
         return this.rewards;
     }
 
@@ -50,7 +49,7 @@ public class JsonRewardRepository implements RewardRepository {
     }
 
     @Override
-    public List<Reward> findByPage(int page, boolean premiumRewards) {
+    public List<Reward> findByPage(int page, boolean premiumRewards) { //TODO CHANGE METHOD EMPLACEMENT
         List<Reward> pageRewards = new ArrayList<>();
         if (premiumRewards) {
             int endIndex = 9 * page;
