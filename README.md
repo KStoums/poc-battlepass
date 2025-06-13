@@ -11,13 +11,14 @@
   - `/battlepass-admin resetplayer <player>` – Reset a player's profile.
   - `/battlepass-admin setlevel <level> <player>` – Set a player's level.
   - `/battlepass-admin addlevel <level> <player>` – Add levels to a player.
+  - `/battlepass-admin reloadrewards` – Reload rewards data
 - 🧩 **Configurable rewards**: Define Battlepass items in a JSON file. Each item can include:
   - `material`: The Minecraft item type (e.g. DIAMOND_SWORD)
   - `name`: Custom item name
   - `description`: A list of lore lines
   - `level`: Required level to unlock
   - `premium`: Boolean indicating if the item is for premium users
-- 🗃️ **Custom storage system**: Players and items are stored in JSON by default, but you can implement your own storage by creating a new `PlayerRepository` or item provider.
+- 🗃️ **Custom storage system**: Players and items are stored in JSON by default, but you can implement your own storage by creating a new `PlayerRepository`, `RewardRepository`, or item provider.
 - 🧠 **Optimized performance**:
   - Player data is cached on plugin load.
   - Data is saved every 5 minutes and on shutdown to reduce file I/O.
