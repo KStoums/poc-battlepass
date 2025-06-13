@@ -21,6 +21,7 @@
 - 🧠 **Optimized performance**:
   - Player data is cached on plugin load.
   - Data is saved every 5 minutes and on shutdown to reduce file I/O.
+  - Codebase is clean and flexible, making future additions or changes easy to implement.
 - ⚔️ **Progression system**: Players gain experience and level up by killing mobs or other players.
 
 ---
@@ -28,6 +29,6 @@
 ## 🧪 Design & Extensibility
 
 - Clean and intuitive interfaces to extend the plugin.
-- Battlepass item display is currently hardcoded in the menu for simplicity.
+- Battlepass items navigation is currently hardcoded in the menu for simplicity.
 - Designed as a proof-of-concept for a private project but **open for reuse**.
-  - **Please do not claim the plugin or its code as your own.**
+  - **This plugin is shared publicly and freely for the enjoyment of the community — please do not claim it or its code as your own.**
