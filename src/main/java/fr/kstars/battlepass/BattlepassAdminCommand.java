@@ -67,7 +67,7 @@ public class BattlepassAdminCommand implements CommandExecutor {
 
     private void resetPlayerOption(Player player, String[] args) {
         if (args.length != 2) {
-            player.sendMessage(Component.text("Usage: /battlepass-admin resetplayer <player>"));
+            player.sendMessage(Component.text("Usage: /battlepass-admin resetplayer <player>", NamedTextColor.DARK_RED));
             return;
         }
 
@@ -102,7 +102,7 @@ public class BattlepassAdminCommand implements CommandExecutor {
 
     private void setLevelOption(Player player, String[] args) {
         if (args.length != 3) {
-            player.sendMessage(Component.text("Usage: /battlepass-admin setlevel <level> <player>"));
+            player.sendMessage(Component.text("Usage: /battlepass-admin setlevel <level> <player>", NamedTextColor.DARK_RED));
             return;
         }
 
@@ -138,13 +138,13 @@ public class BattlepassAdminCommand implements CommandExecutor {
                             .append(Component.text(".", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
             );
         } catch (NumberFormatException e) {
-            player.sendMessage(Component.text("Usage: /battlepass-admin setlevel <level> <player>"));
+            player.sendMessage(Component.text("Usage: /battlepass-admin setlevel <level> <player>", NamedTextColor.DARK_RED));
         }
     }
 
     private void addLevelOption(Player player, String[] args) {
         if (args.length != 3) {
-            player.sendMessage(Component.text("Usage: /battlepass-admin addlevel <level> <player>"));
+            player.sendMessage(Component.text("Usage: /battlepass-admin addlevel <level> <player>", NamedTextColor.DARK_RED));
             return;
         }
 
@@ -181,7 +181,7 @@ public class BattlepassAdminCommand implements CommandExecutor {
             );
 
         } catch (NumberFormatException e) {
-            player.sendMessage(Component.text("Usage: /battlepass-admin addlevel <level> <player>"));
+            player.sendMessage(Component.text("Usage: /battlepass-admin addlevel <level> <player>", NamedTextColor.DARK_RED));
         }
     }
 
