@@ -36,6 +36,9 @@ public final class BattlepassPlugin extends JavaPlugin {
             Objects.requireNonNull(getCommand("battlepass")).setExecutor(new BattlepassCommand(rewardRepository, playerRepository));
             Objects.requireNonNull(getCommand("battlepass-admin")).setExecutor(new BattlepassAdminCommand(playerRepository, rewardRepository, jsonRewardFileLoader));
 
+            //Tab Completer
+            Objects.requireNonNull(getCommand("battlepass-admin")).setTabCompleter(new BattlepassAdminTabCompleter());
+
             //Events
             getServer().getPluginManager().registerEvents(new InventoryClickListener(rewardRepository, playerRepository), this);
 

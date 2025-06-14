@@ -4,6 +4,9 @@ import fr.kstars.battlepass.player.PlayerRepository;
 import fr.kstars.battlepass.reward.RewardRepository;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,16 +38,23 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
+        Player playerWhoClicked = Bukkit.getPlayer(event.getWhoClicked().getUniqueId());
+        if (playerWhoClicked == null) {
+            return;
+        }
+
         String itemDisplayName = PlainTextComponentSerializer.plainText().serialize(event.getCurrentItem().displayName());
         String nextPageItemNameString = PlainTextComponentSerializer.plainText().serialize(BattlepassInventory.NEXT_PAGE_ITEM_NAME);
         String previousPageItemNameString = PlainTextComponentSerializer.plainText().serialize(BattlepassInventory.PREVIOUS_PAGE_ITEM_NAME);
 
         if (itemDisplayName.equals("[" + nextPageItemNameString + "]")) {
-            Inventory nextPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage.get()+1, event.getWhoClicked().getUniqueId());
-            event.getWhoClicked().openInventory(nextPageBattlepassInventory);
+            Inventory nextPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage.get()+1, playerWhoClicked.getUniqueId());
+            playerWhoClicked.openInventory(nextPageBattlepassInventory);
+            playerWhoClicked.playSound(playerWhoClicked.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
         } else if (itemDisplayName.equals("[" + previousPageItemNameString + "]")) {
-            Inventory previousPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage.get()-1, event.getWhoClicked().getUniqueId());
-            event.getWhoClicked().openInventory(previousPageBattlepassInventory);
+            Inventory previousPageBattlepassInventory = new BattlepassInventory(this.rewardRepository, playerRepository).createInventory(currentPage.get()-1, playerWhoClicked.getUniqueId());
+            playerWhoClicked.openInventory(previousPageBattlepassInventory);
+            playerWhoClicked.playSound(playerWhoClicked.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1, 1);
         }
 
         event.setCancelled(true);

@@ -8,7 +8,9 @@ commands:
   battlepass:
     description: Open the battlepass interface
     aliases: bp
+    usage: /battlepass
   battlepass-admin:
     description: Commands for server administrators
+    usage: /battlepass-admin <option> [args]
     aliases: bpa
     permission: battlepass.admin

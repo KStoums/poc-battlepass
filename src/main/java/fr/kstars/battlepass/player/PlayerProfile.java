@@ -12,19 +12,15 @@ import java.util.UUID;
 @Setter
 @Getter
 public class PlayerProfile {
-    public static final double XP_BASE = 100;
-    public static final double GROWTH_RATE = 1.5;
+    private static double XP_BASE = 100;
+    private static double GROWTH_RATE = 1.5;
 
     private UUID playerId;
     private double experience;
 
     public int experienceToLevel(double experience) {
-        if (experience == 0) {
-            return 0;
-        }
-
         double total = 0;
-        int level = 1;
+        int level = 0;
 
         while (true) {
             double required = XP_BASE * Math.pow(GROWTH_RATE, level - 1);
@@ -40,7 +36,7 @@ public class PlayerProfile {
     public double levelToExperience(int level) {
         double total = 0;
 
-        for (int i = 1; i < level; i++) {
+        for (int i = 0; i < level; i++) {
             total += XP_BASE * Math.pow(GROWTH_RATE, i - 1);
         }
 
