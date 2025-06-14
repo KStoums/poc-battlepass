@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -23,10 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @AllArgsConstructor
-public class BattlepassAdminReloadCommand implements CommandExecutor {
+public class BattlepassAdminCommand implements CommandExecutor {
     private static final String RESET_PLAYER_OPTION = "resetplayer";
     private static final String SET_LEVEL_OPTION = "setlevel";
     private static final String ADD_LEVEL_OPTION = "addlevel";
@@ -58,7 +56,7 @@ public class BattlepassAdminReloadCommand implements CommandExecutor {
                 addLevelOption(player, args);
                 break;
             case RELOAD_REWARDS_OPTION:
-                reloadRewardsOption(player);
+                reloadRewardsOption(player, args);
                 break;
             default:
                 player.sendMessage(Component.text("Usage: /battlepass-admin <option>", NamedTextColor.DARK_RED));
@@ -87,7 +85,7 @@ public class BattlepassAdminReloadCommand implements CommandExecutor {
             return;
         }
 
-        targetProfile.get().setLevel(0);
+        targetProfile.get().setExperience(0);
         player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR.
                 appendSpace().
                 append(Component.text(Objects.requireNonNull(targetPlayer.getName()) + "'s", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false)).
@@ -122,7 +120,8 @@ public class BattlepassAdminReloadCommand implements CommandExecutor {
                 return;
             }
 
-            targetProfile.get().setLevel(levelInt);
+            double levelExperienceRequired = targetProfile.get().levelToExperience(levelInt);
+            targetProfile.get().setExperience(levelExperienceRequired);
             player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR.
                     appendSpace().
                     append(Component.text("The", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false)).
@@ -162,7 +161,8 @@ public class BattlepassAdminReloadCommand implements CommandExecutor {
                 return;
             }
 
-            targetProfile.get().setLevel(targetProfile.get().getLevel() + levelInt);
+            double levelExperienceRequired = targetProfile.get().levelToExperience(levelInt);
+            targetProfile.get().setExperience(targetProfile.get().getExperience() + levelExperienceRequired);
             player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR.
                     appendSpace().
                     append(Component.text("The", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false)).
@@ -179,9 +179,15 @@ public class BattlepassAdminReloadCommand implements CommandExecutor {
         }
     }
 
-    private void reloadRewardsOption(Player player) {
+    private void reloadRewardsOption(Player player, String[] args) { //TODO RE OPEN FILE IF NEW DATA HAS BEEN ADDED
+        if (args.length != 1) {
+            player.sendMessage(Component.text("Usage: /battlepass-admin reloadrewards", NamedTextColor.DARK_RED));
+            return;
+        }
+
         try {
-            Reward[] rewardsJsonData = this.jsonRewardFileLoader.getJsonData(this.jsonRewardFileLoader.loadJsonRewardFile());
+            File jsonDataFile = this.jsonRewardFileLoader.loadJsonRewardFile();
+            Reward[] rewardsJsonData = this.jsonRewardFileLoader.getJsonData(jsonDataFile);
             this.rewardRepository.updateRewards(rewardsJsonData);
 
             player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR.

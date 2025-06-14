@@ -43,7 +43,7 @@ public class BattlepassInventory {
         }
 
         int pageEndLevel = 9 * page;
-        int pageStartLevel = pageEndLevel - 9;
+        int pageStartLevel = (pageEndLevel - 9) + 1; //+1 because the first level is not 0 but 1
 
         String InventoryName = BATTLEPASS_INVENTORY_NAME.replace("%levelStart%", String.valueOf(pageStartLevel)).
                 replace("%levelEnd%", String.valueOf(pageEndLevel));
@@ -69,7 +69,7 @@ public class BattlepassInventory {
             meta.displayName(Component.text(reward.getName()));
             meta.lore(List.of(Component.text(reward.getDescription())));
 
-            if (playerProfile.getLevel() >= reward.getLevel()) {
+            if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= reward.getLevel()) {
                 meta.addEnchant(Enchantment.LOYALTY, 1, false);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
@@ -92,7 +92,7 @@ public class BattlepassInventory {
             meta.displayName(Component.text(reward.getName()));
             meta.lore(List.of(Component.text(reward.getDescription())));
 
-            if (playerProfile.getLevel() >= reward.getLevel()) {
+            if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= reward.getLevel()) {
                 meta.addEnchant(Enchantment.LOYALTY, 1, false);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
@@ -106,7 +106,7 @@ public class BattlepassInventory {
         int pageLevelIndex = (9 * currentPage) - 8;
 
         for (int i = 9; i < 18; i++) { //9 = First inventory slot where to start progress items & 19 = last inventory slots
-            if (playerProfile.getLevel() >= pageLevelIndex) {
+            if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= pageLevelIndex) {
                 ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
                 ItemMeta meta = item.getItemMeta();
                 meta.displayName(Component.text("UNLOCKED", NamedTextColor.DARK_GREEN));
@@ -135,7 +135,7 @@ public class BattlepassInventory {
             inventory.setItem(39, navigationItem);
         }
 
-        if (!this.rewardRepository.findByPage(page + 1, false).isEmpty() && !this.rewardRepository.findByPage(page, true).isEmpty()) {
+        if (!this.rewardRepository.findByPage(page+1, false).isEmpty() || !this.rewardRepository.findByPage(page+1, true).isEmpty()) {
             meta.displayName(NEXT_PAGE_ITEM_NAME);
             navigationItem.setItemMeta(meta);
             inventory.setItem(41, navigationItem);
@@ -152,7 +152,10 @@ public class BattlepassInventory {
                         append(Component.text(playerUsername, NamedTextColor.GRAY)),
                 Component.text("Level:", NamedTextColor.WHITE).
                         appendSpace().
-                        append(Component.text(playerProfile.getLevel(), NamedTextColor.GRAY))
+                        append(Component.text(playerProfile.experienceToLevel(playerProfile.getExperience()), NamedTextColor.GRAY)),
+                Component.text("Experience:", NamedTextColor.WHITE).
+                        appendSpace().
+                        append(Component.text(playerProfile.getExperience(), NamedTextColor.GRAY))
         ));
         playerProfileSkullMeta.setOwningPlayer(Bukkit.getPlayer(playerProfile.getPlayerId()));
         playerProfileItem.setItemMeta(playerProfileSkullMeta);

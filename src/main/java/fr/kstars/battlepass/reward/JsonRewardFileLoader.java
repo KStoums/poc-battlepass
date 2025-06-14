@@ -23,6 +23,7 @@ public class JsonRewardFileLoader {
 
             mapper.writeValue(jsonDataFile, exempleRewards);
         }
+
         return jsonDataFile;
     }
 
