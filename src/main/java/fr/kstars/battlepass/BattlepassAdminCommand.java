@@ -179,7 +179,7 @@ public class BattlepassAdminCommand implements CommandExecutor {
         }
     }
 
-    private void reloadRewardsOption(Player player, String[] args) { //TODO RE OPEN FILE IF NEW DATA HAS BEEN ADDED
+    private void reloadRewardsOption(Player player, String[] args) {
         if (args.length != 1) {
             player.sendMessage(Component.text("Usage: /battlepass-admin reloadrewards", NamedTextColor.DARK_RED));
             return;
