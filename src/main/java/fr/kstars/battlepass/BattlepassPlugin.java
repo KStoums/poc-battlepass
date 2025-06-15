@@ -41,6 +41,7 @@ public final class BattlepassPlugin extends JavaPlugin {
 
             //Events
             getServer().getPluginManager().registerEvents(new InventoryClickListener(rewardRepository, playerRepository), this);
+            getServer().getPluginManager().registerEvents(new EntityDeathListener(playerRepository, rewardRepository), this);
 
             //Tasks
             getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerSaveDataTask(playerRepository), 0, 1200 * 5);

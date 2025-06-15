@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class JsonRewardRepository implements RewardRepository {
@@ -19,6 +20,11 @@ public class JsonRewardRepository implements RewardRepository {
     @Override
     public List<Reward> findAll() {
         return this.rewards;
+    }
+
+    @Override
+    public List<Reward> findAllByLevel(int rewardLevel) {
+        return this.rewards.stream().filter(reward -> reward.getLevel() == rewardLevel).collect(Collectors.toList());
     }
 
     @Override
@@ -54,11 +60,11 @@ public class JsonRewardRepository implements RewardRepository {
         List<Reward> pageRewards = new ArrayList<>();
         if (premiumRewards) {
             int endIndex = 9 * page;
-            int startIndex = endIndex - 9;
+            int startIndex = (endIndex - 9) + 1; //+1 because the first level is not 0 but 1
 
             List<Reward> rewards = this.findAllPremium();
             for (Reward reward : rewards) {
-                if (!(reward.getLevel() > startIndex && reward.getLevel() < endIndex)) {
+                if (!(reward.getLevel() >= startIndex && reward.getLevel() <= endIndex)) {
                     continue;
                 }
 
@@ -69,11 +75,11 @@ public class JsonRewardRepository implements RewardRepository {
         }
 
         int endIndex = 9 * page;
-        int startIndex = endIndex - 9;
+        int startIndex = (endIndex - 9) + 1; //+1 because the first level is not 0 but 1
 
         List<Reward> rewards = this.findAllFree();
         for (Reward reward : rewards) {
-            if (!(reward.getLevel() > startIndex && reward.getLevel() < endIndex)) {
+            if (!(reward.getLevel() >= startIndex && reward.getLevel() <= endIndex)) {
                 continue;
             }
 

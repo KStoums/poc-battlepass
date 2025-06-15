@@ -56,8 +56,8 @@ public class BattlepassInventory {
         return inventory;
     }
 
-    private void addFreeItems(Inventory inventory, int currentPage, PlayerProfile playerProfile) {
-        List<Reward> rewards = this.rewardRepository.findByPage(currentPage, false);
+    private void addFreeItems(Inventory inventory, int page, PlayerProfile playerProfile) {
+        List<Reward> rewards = this.rewardRepository.findByPage(page, false);
 
         for (Reward reward : rewards) {
             if (reward.getMaterial().isEmpty()) {
@@ -79,8 +79,8 @@ public class BattlepassInventory {
         }
     }
 
-    private void addPremiumItems(Inventory inventory, int currentPage, PlayerProfile playerProfile) {
-        List<Reward> rewards = this.rewardRepository.findByPage(currentPage, true);
+    private void addPremiumItems(Inventory inventory, int page, PlayerProfile playerProfile) {
+        List<Reward> rewards = this.rewardRepository.findByPage(page, true);
 
         for (Reward reward : rewards) {
             if (reward.getMaterial().isEmpty()) {
@@ -102,8 +102,8 @@ public class BattlepassInventory {
         }
     }
 
-    private void addProgressItems(Inventory inventory, int currentPage, PlayerProfile playerProfile) {
-        int pageLevelIndex = (9 * currentPage) - 8;
+    private void addProgressItems(Inventory inventory, int page, PlayerProfile playerProfile) {
+        int pageLevelIndex = (9 * page) - 8;
 
         for (int i = 9; i < 18; i++) { //9 = First inventory slot where to start progress items & 19 = last inventory slots
             if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= pageLevelIndex) {

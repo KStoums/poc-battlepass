@@ -40,6 +40,6 @@ public class PlayerProfile {
             total += XP_BASE * Math.pow(GROWTH_RATE, i - 1);
         }
 
-        return (int) Math.round(total);
+        return total;
     }
 }

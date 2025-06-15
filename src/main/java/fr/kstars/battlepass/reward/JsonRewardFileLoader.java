@@ -18,7 +18,7 @@ public class JsonRewardFileLoader {
             ObjectMapper mapper = new ObjectMapper();
 
             Reward[] exempleRewards = new Reward[] {
-                    new Reward("Example", "Example", Material.CHEST_MINECART,1, false)
+                    new Reward("§cExample", "§cExample", "give %player% minecraft:diamond 1", Material.CHEST_MINECART,1, false)
             };
 
             mapper.writeValue(jsonDataFile, exempleRewards);

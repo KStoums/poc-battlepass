@@ -13,6 +13,7 @@ import org.bukkit.Material;
 public class Reward {
     private String name;
     private String description;
+    private String command;
     private Material material;
     private int level;
     private boolean premium;
