@@ -21,7 +21,7 @@
   - `description`: A list of lore lines
   - `level`: Required level to unlock
   - `command`: Command executed when reward is unlocked
-  - `premium`: Boolean indicating if the item is for premium users
+  - `premium`: Boolean indicating whether the item is reserved for premium users (if premium, you need battlepass.premium permission to unlock it)
 - 🗃️ **Custom storage system**: Players and items are stored in JSON by default, but you can implement your own storage by creating a new `PlayerRepository`, `RewardRepository`, or item provider.
 - 🧠 **Optimized performance**:
   - Player data is cached on plugin load.
