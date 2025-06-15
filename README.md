@@ -2,6 +2,10 @@
 
 **Battlepass** is a flexible and lightweight Minecraft plugin (Java) that adds a Battlepass system to your server. Players can unlock rewards by leveling up through player or mob kills.
 
+<p align="center">
+  <img src="./assets/demo.gif" alt="Battlepass Preview">
+</p>
+
 ---
 
 ## 🔧 Features
