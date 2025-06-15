@@ -31,6 +31,8 @@ public class BattlepassInventory {
             append(Component.text("Profile", NamedTextColor.DARK_RED, TextDecoration.BOLD));
     public static final String BATTLEPASS_INVENTORY_NAME = "§4§lBattlepass §7| §4Level §l%levelStart% §4to §l%levelEnd%"; //Change the name if you wish, but do not remove "%levelStart% to %levelEnd%".
 
+    public static final int INVENTORY_SLOT_SIZE = 9;
+
     public Inventory createInventory(int page, UUID playerUuid) {
         Optional<PlayerProfile> playerProfile = this.playerRepository.findById(playerUuid);
         if (playerProfile.isEmpty()) {
@@ -39,8 +41,8 @@ public class BattlepassInventory {
             playerProfile = Optional.of(newPlayerProfile);
         }
 
-        int pageEndLevel = 9 * page;
-        int pageStartLevel = (pageEndLevel - 9) + 1; //+1 because the first level is not 0 but 1
+        int pageEndLevel = INVENTORY_SLOT_SIZE * page;
+        int pageStartLevel = (pageEndLevel - INVENTORY_SLOT_SIZE) + 1; //+1 because the first level is not 0 but 1
 
         String InventoryName = BATTLEPASS_INVENTORY_NAME.replace("%levelStart%", String.valueOf(pageStartLevel)).
                 replace("%levelEnd%", String.valueOf(pageEndLevel));
@@ -98,7 +100,7 @@ public class BattlepassInventory {
     }
 
     private void addProgressItems(Inventory inventory, int page, PlayerProfile playerProfile) {
-        int pageLevelIndex = (9 * page) - 8;
+        int pageLevelIndex = (INVENTORY_SLOT_SIZE * page) - 8;
 
         for (int i = 9; i < 18; i++) { //9 = First inventory slot where to start progress items & 19 = last inventory slots
             if (playerProfile.expToLevel(playerProfile.getExp()) >= pageLevelIndex) {
@@ -150,7 +152,7 @@ public class BattlepassInventory {
                         append(Component.text(playerProfile.expToLevel(playerProfile.getExp()), NamedTextColor.GRAY)),
                 Component.text("Experience:", NamedTextColor.WHITE).
                         appendSpace().
-                        append(Component.text(playerProfile.getExp(), NamedTextColor.GRAY))
+                        append(Component.text((int) playerProfile.getExp(), NamedTextColor.GRAY))
         ));
         playerProfileSkullMeta.setOwningPlayer(Bukkit.getPlayer(playerProfile.getPlayerId()));
         playerProfileItem.setItemMeta(playerProfileSkullMeta);
@@ -159,9 +161,9 @@ public class BattlepassInventory {
 
     private int getItemSlot(int itemLevel, boolean premium) {
         if (!premium) {
-            return (itemLevel - 1) % 9; //9 corresponds to the number of slots on the first line of inventory
+            return (itemLevel - 1) % INVENTORY_SLOT_SIZE;
         }
 
-        return 18 + (itemLevel - 1) % 9; //18 corresponds to the first slot of the third line of an inventory
+        return 18 + (itemLevel - 1) % INVENTORY_SLOT_SIZE;
     }
 }

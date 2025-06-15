@@ -1,5 +1,5 @@
 name: poc-battlepass
-version: '1.0.1-POC'
+version: '1.0.2-POC'
 author: Kstars
 main: fr.kstars.battlepass.BattlepassPlugin
 api-version: '1.21'

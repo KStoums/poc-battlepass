@@ -133,7 +133,7 @@ public class BattlepassAdminCommand implements CommandExecutor {
             PlayerProfile targetProfile = optionalTargetProfile.get();
 
             int oldLevel = targetProfile.expToLevel(targetProfile.getExp());
-            double newLevelExpRequired = targetProfile.LevelToExp(levelInt);
+            double newLevelExpRequired = targetProfile.levelToExp(levelInt);
             targetProfile.setExp(newLevelExpRequired);
             player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR
                             .append(Component.empty().decoration(TextDecoration.BOLD, false))
@@ -184,7 +184,7 @@ public class BattlepassAdminCommand implements CommandExecutor {
 
             PlayerProfile targetProfile = optionalTargetProfile.get();
             int targetLevel = targetProfile.expToLevel(targetProfile.getExp());
-            double newLevelExp = targetProfile.LevelToExp(targetLevel + levelToAddInt);
+            double newLevelExp = targetProfile.levelToExp(targetLevel + levelToAddInt);
             targetProfile.setExp(newLevelExp);
 
             targetProfile.checkIfRewardUnlocked((Player) targetPlayer, this.rewardRepository.findAll(), targetLevel, targetProfile.expToLevel(newLevelExp));

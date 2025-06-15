@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BattlepassAdminTabCompleter implements TabCompleter {
@@ -16,7 +15,7 @@ public class BattlepassAdminTabCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String @NotNull [] args) {
         if (!(sender instanceof Player)) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         List<String> suggestions = new ArrayList<>();
@@ -57,7 +56,7 @@ public class BattlepassAdminTabCompleter implements TabCompleter {
             }
         }
 
-        return Collections.emptyList();
+        return List.of();
     }
 }
 

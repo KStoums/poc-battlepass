@@ -22,8 +22,8 @@ import java.util.Optional;
 public class EntityDeathListener implements Listener {
     private final PlayerRepository playerRepository;
     private final RewardRepository rewardRepository;
-    public static final int EXP_PER_PLAYER_KILL = 20;
-    public static final int EXP_PER_MOB_KILL = 10;
+    public static final double EXP_PER_PLAYER_KILL = 20;
+    public static final double EXP_PER_MOB_KILL = 10;
 
     @EventHandler(priority = EventPriority.LOW)
     public void onEntityDeath(EntityDeathEvent event) {
@@ -47,7 +47,7 @@ public class EntityDeathListener implements Listener {
         PlayerProfile killerProfile = optionalKillerProfile.get();
         int oldKillerLevel = killerProfile.expToLevel(killerProfile.getExp());
         String entityType;
-        int expEarns;
+        double expEarns;
         if (event.getEntity() instanceof Player) {
             entityType = "player";
             expEarns = EXP_PER_PLAYER_KILL;
@@ -83,6 +83,6 @@ public class EntityDeathListener implements Listener {
             return;
         }
 
-        killerProfile.checkIfRewardUnlocked(killer, rewards, killerProfile.expToLevel(killerProfile.getExp()), oldKillerLevel);
+        killerProfile.checkIfRewardUnlocked(killer, rewards, oldKillerLevel, killerProfile.expToLevel(killerProfile.getExp()));
     }
 }

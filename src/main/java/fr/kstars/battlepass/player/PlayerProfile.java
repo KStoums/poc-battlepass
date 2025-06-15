@@ -63,7 +63,7 @@ public class PlayerProfile {
 
     public boolean addExpCheckLevelUp(double exp) {
         int oldLevel = expToLevel(this.exp);
-        setExp(exp);
+        this.exp = this.exp + exp;
         int newLevel = expToLevel(this.exp);
 
         return newLevel > oldLevel;
@@ -84,7 +84,7 @@ public class PlayerProfile {
         return level;
     }
 
-    public double LevelToExp(int level) {
+    public double levelToExp(int level) {
         double total = 0;
 
         for (int i = 0; i < level; i++) {
