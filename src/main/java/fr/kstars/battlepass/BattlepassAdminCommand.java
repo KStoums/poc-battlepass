@@ -73,8 +73,8 @@ public class BattlepassAdminCommand implements CommandExecutor {
 
         OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[1]);
 
-        Optional<PlayerProfile> targetProfile = this.playerRepository.findById(targetPlayer.getUniqueId());
-        if (targetProfile.isEmpty()) {
+        Optional<PlayerProfile> optionalTargetProfile = this.playerRepository.findById(targetPlayer.getUniqueId());
+        if (optionalTargetProfile.isEmpty()) {
             player.sendMessage(
                     Component.text("Error: Player", NamedTextColor.DARK_RED).
                             appendSpace().
@@ -85,18 +85,25 @@ public class BattlepassAdminCommand implements CommandExecutor {
             return;
         }
 
-        targetProfile.get().setExperience(0);
+        PlayerProfile targetProfile = optionalTargetProfile.get();
+
+        targetProfile.setExp(0);
         player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR
                         .append(Component.empty().decoration(TextDecoration.BOLD, false))
                         .appendSpace()
-                        .append(Component.text("The", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                        .append(Component.text("The", NamedTextColor.WHITE).
+                                decoration(TextDecoration.BOLD, false))
                         .appendSpace()
-                        .append(Component.text(Objects.requireNonNull(targetPlayer.getName()) + "'s", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false))
+                        .append(Component.text(Objects.requireNonNull(targetPlayer.getName()) + "'s", NamedTextColor.DARK_RED).
+                                decoration(TextDecoration.BOLD, false))
                         .appendSpace()
-                        .append(Component.text("profile has been", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                        .append(Component.text("profile has been", NamedTextColor.WHITE).
+                                decoration(TextDecoration.BOLD, false))
                         .appendSpace()
-                        .append(Component.text("reset", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false))
-                        .append(Component.text(".", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                        .append(Component.text("reset", NamedTextColor.DARK_RED).
+                                decoration(TextDecoration.BOLD, false))
+                        .append(Component.text(".", NamedTextColor.WHITE).
+                                decoration(TextDecoration.BOLD, false))
         );
     }
 
@@ -111,8 +118,8 @@ public class BattlepassAdminCommand implements CommandExecutor {
             int levelInt = Integer.parseInt(level);
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
 
-            Optional<PlayerProfile> targetProfile = this.playerRepository.findById(targetPlayer.getUniqueId());
-            if (targetProfile.isEmpty()) {
+            Optional<PlayerProfile> optionalTargetProfile = this.playerRepository.findById(targetPlayer.getUniqueId());
+            if (optionalTargetProfile.isEmpty()) {
                 player.sendMessage(
                         Component.text("Error: Player", NamedTextColor.DARK_RED).
                                 appendSpace().
@@ -123,20 +130,30 @@ public class BattlepassAdminCommand implements CommandExecutor {
                 return;
             }
 
-            double levelExperienceRequired = targetProfile.get().levelToExperience(levelInt);
-            targetProfile.get().setExperience(levelExperienceRequired);
+            PlayerProfile targetProfile = optionalTargetProfile.get();
+
+            int oldLevel = targetProfile.expToLevel(targetProfile.getExp());
+            double newLevelExpRequired = targetProfile.LevelToExp(levelInt);
+            targetProfile.setExp(newLevelExpRequired);
             player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR
                             .append(Component.empty().decoration(TextDecoration.BOLD, false))
                             .appendSpace()
-                            .append(Component.text("The", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                            .append(Component.text("The", NamedTextColor.WHITE).
+                                    decoration(TextDecoration.BOLD, false))
                             .appendSpace()
-                            .append(Component.text(Objects.requireNonNull(targetPlayer.getName()) + "'s", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false))
+                            .append(Component.text(Objects.requireNonNull(targetPlayer.getName()) + "'s", NamedTextColor.DARK_RED).
+                                    decoration(TextDecoration.BOLD, false))
                             .appendSpace()
-                            .append(Component.text("level has been", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                            .append(Component.text("level has been", NamedTextColor.WHITE).
+                                    decoration(TextDecoration.BOLD, false))
                             .appendSpace()
-                            .append(Component.text("updated", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false))
-                            .append(Component.text(".", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                            .append(Component.text("updated", NamedTextColor.DARK_RED).
+                                    decoration(TextDecoration.BOLD, false))
+                            .append(Component.text(".", NamedTextColor.WHITE).
+                                    decoration(TextDecoration.BOLD, false))
             );
+
+            targetProfile.checkIfRewardUnlocked((Player) targetPlayer, this.rewardRepository.findAll(), oldLevel, targetProfile.expToLevel(newLevelExpRequired));
         } catch (NumberFormatException e) {
             player.sendMessage(Component.text("Usage: /battlepass-admin setlevel <level> <player>", NamedTextColor.DARK_RED));
         }
@@ -148,13 +165,13 @@ public class BattlepassAdminCommand implements CommandExecutor {
             return;
         }
 
-        String level = args[1];
+        String levelToAdd = args[1];
         try {
-            int levelInt = Integer.parseInt(level);
+            int levelToAddInt = Integer.parseInt(levelToAdd);
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[2]);
 
-            Optional<PlayerProfile> targetProfile = this.playerRepository.findById(targetPlayer.getUniqueId());
-            if (targetProfile.isEmpty()) {
+            Optional<PlayerProfile> optionalTargetProfile = this.playerRepository.findById(targetPlayer.getUniqueId());
+            if (optionalTargetProfile.isEmpty()) {
                 player.sendMessage(
                         Component.text("Error: Player", NamedTextColor.DARK_RED).
                                 appendSpace().
@@ -165,21 +182,12 @@ public class BattlepassAdminCommand implements CommandExecutor {
                 return;
             }
 
-            double levelExperienceRequired = targetProfile.get().levelToExperience(levelInt);
-            targetProfile.get().setExperience(targetProfile.get().getExperience() + levelExperienceRequired);
-            player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR
-                            .append(Component.empty().decoration(TextDecoration.BOLD, false))
-                            .appendSpace()
-                            .append(Component.text("The", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
-                            .appendSpace()
-                            .append(Component.text(Objects.requireNonNull(targetPlayer.getName()) + "'s", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false))
-                            .appendSpace()
-                            .append(Component.text("level has been", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
-                            .appendSpace()
-                            .append(Component.text("updated", NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false))
-                            .append(Component.text(".", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
-            );
+            PlayerProfile targetProfile = optionalTargetProfile.get();
+            int targetLevel = targetProfile.expToLevel(targetProfile.getExp());
+            double newLevelExp = targetProfile.LevelToExp(targetLevel + levelToAddInt);
+            targetProfile.setExp(newLevelExp);
 
+            targetProfile.checkIfRewardUnlocked((Player) targetPlayer, this.rewardRepository.findAll(), targetLevel, targetProfile.expToLevel(newLevelExp));
         } catch (NumberFormatException e) {
             player.sendMessage(Component.text("Usage: /battlepass-admin addlevel <level> <player>", NamedTextColor.DARK_RED));
         }
@@ -199,7 +207,8 @@ public class BattlepassAdminCommand implements CommandExecutor {
             player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR
                             .append(Component.empty().decoration(TextDecoration.BOLD, false))
                             .appendSpace()
-                            .append(Component.text("Rewards reloaded.", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+                            .append(Component.text("Rewards reloaded.", NamedTextColor.WHITE)
+                                    .decoration(TextDecoration.BOLD, false))
             );
 
         } catch (IOException e) {

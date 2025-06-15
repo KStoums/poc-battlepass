@@ -1,10 +1,10 @@
 package fr.kstars.battlepass.reward;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bukkit.Material;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class JsonRewardFileLoader {
     public File loadJsonRewardFile() throws IOException {
@@ -18,7 +18,7 @@ public class JsonRewardFileLoader {
             ObjectMapper mapper = new ObjectMapper();
 
             Reward[] exempleRewards = new Reward[] {
-                    new Reward("§cExample", "§cExample", "give %player% minecraft:diamond 1", Material.CHEST_MINECART,1, false)
+                    new Reward("§cExample", List.of("§cExample"), "give %player% minecraft:diamond 1", 1, false)
             };
 
             mapper.writeValue(jsonDataFile, exempleRewards);

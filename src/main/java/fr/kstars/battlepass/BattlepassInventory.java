@@ -18,10 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 public class BattlepassInventory {
@@ -60,16 +57,15 @@ public class BattlepassInventory {
         List<Reward> rewards = this.rewardRepository.findByPage(page, false);
 
         for (Reward reward : rewards) {
-            if (reward.getMaterial().isEmpty()) {
-                reward.setMaterial(Material.CHEST_MINECART);
-            }
-
-            ItemStack item = new ItemStack(reward.getMaterial());
+            ItemStack item = new ItemStack(Material.HOPPER_MINECART);
             ItemMeta meta = item.getItemMeta();
             meta.displayName(Component.text(reward.getName()));
-            meta.lore(List.of(Component.text(reward.getDescription())));
 
-            if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= reward.getLevel()) {
+            List<Component> lore = new ArrayList<>();
+            reward.getDescription().forEach(desc -> lore.add(Component.text(desc)));
+            meta.lore(lore);
+
+            if (playerProfile.expToLevel(playerProfile.getExp()) >= reward.getLevel()) {
                 meta.addEnchant(Enchantment.LOYALTY, 1, false);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
@@ -83,16 +79,15 @@ public class BattlepassInventory {
         List<Reward> rewards = this.rewardRepository.findByPage(page, true);
 
         for (Reward reward : rewards) {
-            if (reward.getMaterial().isEmpty()) {
-                reward.setMaterial(Material.CHEST_MINECART);
-            }
-
-            ItemStack item = new ItemStack(reward.getMaterial());
+            ItemStack item = new ItemStack(Material.CHEST_MINECART);
             ItemMeta meta = item.getItemMeta();
             meta.displayName(Component.text(reward.getName()));
-            meta.lore(List.of(Component.text(reward.getDescription())));
 
-            if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= reward.getLevel()) {
+            List<Component> lore = new ArrayList<>();
+            reward.getDescription().forEach(desc -> lore.add(Component.text(desc)));
+            meta.lore(lore);
+
+            if (playerProfile.expToLevel(playerProfile.getExp()) >= reward.getLevel()) {
                 meta.addEnchant(Enchantment.LOYALTY, 1, false);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
@@ -106,7 +101,7 @@ public class BattlepassInventory {
         int pageLevelIndex = (9 * page) - 8;
 
         for (int i = 9; i < 18; i++) { //9 = First inventory slot where to start progress items & 19 = last inventory slots
-            if (playerProfile.experienceToLevel(playerProfile.getExperience()) >= pageLevelIndex) {
+            if (playerProfile.expToLevel(playerProfile.getExp()) >= pageLevelIndex) {
                 ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
                 ItemMeta meta = item.getItemMeta();
                 meta.displayName(Component.text("UNLOCKED", NamedTextColor.DARK_GREEN));
@@ -152,10 +147,10 @@ public class BattlepassInventory {
                         append(Component.text(playerUsername, NamedTextColor.GRAY)),
                 Component.text("Level:", NamedTextColor.WHITE).
                         appendSpace().
-                        append(Component.text(playerProfile.experienceToLevel(playerProfile.getExperience()), NamedTextColor.GRAY)),
+                        append(Component.text(playerProfile.expToLevel(playerProfile.getExp()), NamedTextColor.GRAY)),
                 Component.text("Experience:", NamedTextColor.WHITE).
                         appendSpace().
-                        append(Component.text(playerProfile.getExperience(), NamedTextColor.GRAY))
+                        append(Component.text(playerProfile.getExp(), NamedTextColor.GRAY))
         ));
         playerProfileSkullMeta.setOwningPlayer(Bukkit.getPlayer(playerProfile.getPlayerId()));
         playerProfileItem.setItemMeta(playerProfileSkullMeta);

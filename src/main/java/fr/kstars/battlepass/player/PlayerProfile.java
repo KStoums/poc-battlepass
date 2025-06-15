@@ -1,10 +1,19 @@
 package fr.kstars.battlepass.player;
 
+import fr.kstars.battlepass.reward.Reward;
+import fr.kstars.battlepass.util.ChatUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -16,15 +25,57 @@ public class PlayerProfile {
     private static double GROWTH_RATE = 1.5;
 
     private UUID playerId;
-    private double experience;
+    private double exp;
 
-    public int experienceToLevel(double experience) {
+    public void checkIfRewardUnlocked(Player player, List<Reward> rewards, int oldLevel, int newLevel) {
+        List<String> rewardsName = new ArrayList<>();
+        for (Reward reward : rewards) {
+            if (reward.getLevel() <= oldLevel || reward.getLevel() > newLevel) {
+                continue;
+            }
+
+            if (reward.isPremium() && !player.hasPermission("battlepass.premium")) {
+                continue;
+            }
+
+            if (reward.getCommand().isEmpty()) {
+                continue;
+            }
+
+            if (!reward.getCommand().contains("%player%")) {
+                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), reward.getCommand());
+            } else {
+                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), reward.getCommand().replace("%player%", player.getName()));
+            }
+
+            rewardsName.add(reward.getName());
+        }
+
+        player.sendMessage(ChatUtil.PLUGIN_PREFIX_WITH_COLOR.
+                append(Component.empty().decoration(TextDecoration.BOLD, false)).
+                appendSpace().
+                append(Component.text("You've gone up a level! You've unlocked", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false)).
+                appendSpace().
+                append(Component.text(String.join(", ", rewardsName), NamedTextColor.DARK_RED).decoration(TextDecoration.BOLD, false)).
+                append(Component.text(".", NamedTextColor.WHITE).decoration(TextDecoration.BOLD, false))
+        );
+    }
+
+    public boolean addExpCheckLevelUp(double exp) {
+        int oldLevel = expToLevel(this.exp);
+        setExp(exp);
+        int newLevel = expToLevel(this.exp);
+
+        return newLevel > oldLevel;
+    }
+
+    public int expToLevel(double exp) {
         double total = 0;
         int level = 0;
 
         while (true) {
             double required = XP_BASE * Math.pow(GROWTH_RATE, level - 1);
-            if (total + required > experience) break;
+            if (total + required > exp) break;
 
             total += required;
             level++;
@@ -33,7 +84,7 @@ public class PlayerProfile {
         return level;
     }
 
-    public double levelToExperience(int level) {
+    public double LevelToExp(int level) {
         double total = 0;
 
         for (int i = 0; i < level; i++) {
