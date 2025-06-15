@@ -17,7 +17,6 @@
   - `/battlepass-admin addlevel <level> <player>` – Add levels to a player.
   - `/battlepass-admin reloadrewards` – Reload rewards data
 - 🧩 **Configurable rewards**: Define Battlepass items in a JSON file. Each item can include:
-  - `material`: The Minecraft item type (e.g. DIAMOND_SWORD)
   - `name`: Custom item name
   - `description`: A list of lore lines
   - `level`: Required level to unlock
