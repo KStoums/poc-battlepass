@@ -17,6 +17,7 @@
   - `name`: Custom item name
   - `description`: A list of lore lines
   - `level`: Required level to unlock
+  - `command`: Command executed when reward is unlocked
   - `premium`: Boolean indicating if the item is for premium users
 - 🗃️ **Custom storage system**: Players and items are stored in JSON by default, but you can implement your own storage by creating a new `PlayerRepository`, `RewardRepository`, or item provider.
 - 🧠 **Optimized performance**:
