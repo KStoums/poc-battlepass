@@ -2,6 +2,10 @@
 
 **Battlepass** is a flexible and lightweight Minecraft plugin (Java) that adds a Battlepass system to your server. Players can unlock rewards by leveling up through player or mob kills.
 
+<p align="center">
+  <img src="./assets/demo.gif" alt="Battlepass Preview">
+</p>
+
 ---
 
 ## 🔧 Features
@@ -13,12 +17,11 @@
   - `/battlepass-admin addlevel <level> <player>` – Add levels to a player.
   - `/battlepass-admin reloadrewards` – Reload rewards data
 - 🧩 **Configurable rewards**: Define Battlepass items in a JSON file. Each item can include:
-  - `material`: The Minecraft item type (e.g. DIAMOND_SWORD)
   - `name`: Custom item name
   - `description`: A list of lore lines
   - `level`: Required level to unlock
   - `command`: Command executed when reward is unlocked
-  - `premium`: Boolean indicating if the item is for premium users
+  - `premium`: Boolean indicating whether the item is reserved for premium users (if premium, you need battlepass.premium permission to unlock it)
 - 🗃️ **Custom storage system**: Players and items are stored in JSON by default, but you can implement your own storage by creating a new `PlayerRepository`, `RewardRepository`, or item provider.
 - 🧠 **Optimized performance**:
   - Player data is cached on plugin load.
